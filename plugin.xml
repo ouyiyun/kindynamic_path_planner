@@ -1,0 +1,8 @@
+<library path="lib/libkindynamic_path_planner">
+    <class name="kindynamic_path_planner/KindynamicPlannerROS" type="kindynamic_path_planner::KindynamicPlannerROS" 
+    base_class_type="nav_core::BaseLocalPlanner">
+    <description>
+        a local planner which use hybrid astar algorithm.
+	</description>
+    </class>
+</library>
