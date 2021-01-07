@@ -5,6 +5,8 @@
 #include <pluginlib/class_list_macros.h>
 #include <tf/transform_datatypes.h>
 
+#include <fstream>
+
 PLUGINLIB_EXPORT_CLASS(kindynamic_path_planner::KindynamicPlannerROS, nav_core::BaseLocalPlanner);
 
 namespace kindynamic_path_planner {
@@ -132,6 +134,9 @@ bool KindynamicPlannerROS::computeVelocityCommands(geometry_msgs::Twist& cmd) {
     local_path.header.frame_id = costmap_ros_->getGlobalFrameID();
     local_path.header.stamp = ros::Time::now();
     //! path2d to path
+
+    // std::FILE* fp;
+    // fp = fopen("/home/chelizi/yukkysaito_ws/src/kindynamic_path_planner/src/path.txt", "w");
     for (auto it = path2D.begin(); it != path2D.begin() + path2D.size(); ++it) {
         geometry_msgs::PoseStamped pose;
         pose.header.frame_id = costmap_ros_->getGlobalFrameID();
@@ -139,6 +144,7 @@ bool KindynamicPlannerROS::computeVelocityCommands(geometry_msgs::Twist& cmd) {
         pose.pose.position.x = (*it).x;
         pose.pose.position.y = (*it).y;
         pose.pose.orientation = tf::createQuaternionMsgFromYaw((*it).theta);
+        // fprintf(fp, "%lf, %lf\n", pose.pose.position.x, pose.pose.position.y);
 
         local_path.poses.push_back(pose);
     }

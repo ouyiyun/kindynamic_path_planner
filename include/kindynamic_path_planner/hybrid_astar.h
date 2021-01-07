@@ -81,6 +81,10 @@ private:
     double obstacles_weight_;
     double curvature_weight_;
     double smooth_weight_;
+
+    //! radius
+    double inscribed_radius_;
+    double circumscribed_radius_;
 };
 } // namespace kindynamic_path_planner
 

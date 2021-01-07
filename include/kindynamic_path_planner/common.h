@@ -90,11 +90,6 @@ static const double dt[7] = {0.0, 0.15361743, 0.32146803, 0.52391336, -0.1536174
 // the number of successor node or possible direction
 static const int dir = 14;
 
-//! inscribed radius 内切半径
-static const double inscribedRadius = 1.0; // 0.95
-//! circumscribed radius外接半径
-static const double circumscribedRadius = 2.0;
-
 // penalize function
 // chord length
 static const double chordLength[7] = {1.41421356, 1.41560510, 1.42032146, 1.43051820, 1.41560510, 1.42032146, 1.43051820};

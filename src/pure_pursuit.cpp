@@ -1,7 +1,6 @@
 #include "kindynamic_path_planner/pure_pursuit.h"
 #include <tf/transform_datatypes.h>
 #include "kindynamic_path_planner/common.h"
-
 namespace kindynamic_path_planner {
 PurePursuit::PurePursuit(std::string name) {
     ros::NodeHandle private_nh("~/" + name);

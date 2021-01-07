@@ -1,5 +1,6 @@
 #include "kindynamic_path_planner/hybrid_astar.h"
 
+#include <costmap_2d/footprint.h>
 #include <geometry_msgs/Point.h>
 #include <nav_msgs/Path.h>
 #include <tf/transform_datatypes.h>
@@ -10,6 +11,7 @@ HybridAstar::HybridAstar(std::string name, base_local_planner::WorldModel& world
                          std::vector<geometry_msgs::Point> footprint_spec)
     : world_model_(world_model), footprint_spec_(footprint_spec) {
     ros::NodeHandle private_nh("~/" + name);
+    costmap_ = costmap;
     resolution_ = costmap_->getResolution();
 
     kindymic_path_pub_ = private_nh.advertise<nav_msgs::Path>("kindymic_path", 1);
@@ -19,6 +21,8 @@ HybridAstar::HybridAstar(std::string name, base_local_planner::WorldModel& world
     private_nh.param<double>("curvature_weight", curvature_weight_, 1.0);
     private_nh.param<double>("smooth_weight", smooth_weight_, 1.0);
 
+    costmap_2d::calculateMinAndMaxDistances(footprint_spec_, inscribed_radius_, circumscribed_radius_);
+    ROS_INFO("inscribed_radius_: %lf, circumscribed_radius_: %lf", inscribed_radius_, circumscribed_radius_);
     double map_x = costmap_->getSizeInMetersX();
     double map_y = costmap_->getSizeInMetersY();
 
@@ -381,7 +385,7 @@ bool HybridAstar::collisionCheck(const Node3D& node) {
         }
 
         //! check the point on the trajectory for legality
-        double footprint_cost = world_model_.footprintCost(wx, wy, theta, footprint_spec_, common::inscribedRadius, common::circumscribedRadius);
+        double footprint_cost = world_model_.footprintCost(wx, wy, theta, footprint_spec_, inscribed_radius_, circumscribed_radius_);
         if (footprint_cost == -1) {
             // ROS_INFO("cost: %lf", footprint_cost);
             return false;
@@ -455,7 +459,7 @@ bool HybridAstar::dubinsShot(const Node3D& start, const Node3D& goal, std::vecto
             return false;
         }
 
-        double footprint_cost = world_model_.footprintCost(q[0], q[1], q[2], footprint_spec_, common::inscribedRadius, common::circumscribedRadius);
+        double footprint_cost = world_model_.footprintCost(q[0], q[1], q[2], footprint_spec_, inscribed_radius_, circumscribed_radius_);
 
         if (footprint_cost == -1 || footprint_cost == -2) {
             return false;
